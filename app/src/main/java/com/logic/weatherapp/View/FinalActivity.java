@@ -117,6 +117,48 @@ public class FinalActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
 
             }
+            else{
+
+                viewModel= ViewModelProviders.of(FinalActivity.this).get(WeatherViewModel.class);
+                viewModel.fetchRepo(city);
+
+                viewModel.getData().observe(FinalActivity.this, new Observer<WeatherData>() {
+                    @Override
+                    public void onChanged(@Nullable WeatherData weatherData) {
+
+
+                        Wind wind1=weatherData.wind;
+                        Main main=weatherData.main;
+                        List<Weather> weatherList=weatherData.weather;
+                        Log.e("FinalActivity"," "+main.pressure);
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putString("name",weatherData.name);
+                        editor.putInt("pressure",main.pressure);
+                        editor.putFloat("temp",main.temp);
+                        editor.putInt("hum",main.humidity);
+                        editor.putString("desc",weatherList.get(0).description);
+                        editor.putFloat("speed",wind1.speed);
+                        editor.commit();
+                        adapter.setData(weatherData.name,main.pressure,main.temp,main.humidity,weatherList.get(0).description,wind1.speed,1);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                viewModel.getStatus().observe(FinalActivity.this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(@Nullable Boolean aBoolean) {
+
+                        if (aBoolean){
+                            progressBar.setVisibility(View.GONE);
+                            startJob();
+                        }
+                        else{
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(FinalActivity.this, "No Data Found !", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+            }
 
 
 

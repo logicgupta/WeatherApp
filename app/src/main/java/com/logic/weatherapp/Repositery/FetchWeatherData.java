@@ -15,7 +15,7 @@ public class FetchWeatherData {
     MutableLiveData<Boolean> status=new MutableLiveData<>();
     MutableLiveData<WeatherData> weatherDataMutableLiveData;
 
-    String apiKey="b6907d289e10d714a6e88b30761fae22";
+    String apiKey="266791252176b20d99b84865beb58dfb";
 
 
     public static FetchWeatherData getInstance(){
